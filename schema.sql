@@ -1,0 +1,37 @@
+CREATE TYPE UserClassEnum AS ENUM ('normal', 'agent', 'retailer', 'admin');
+
+CREATE TABLE 'members' (
+    'id' BIGINT NOT NULL AUTO_INCREMENT,
+    'userclass' UserClassEnum NOT NULL DEFAULT 'normal',
+    'username' TEXT COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    'password' TEXT COLLATE utf8_unicode_ci NOT NULL,
+    'balance' BIGINT DEFAULT 0,
+    'name' TEXT COLLATE utf8_unicode_ci NOT NULL,
+    'nickname' TEXT COLLATE utf8_unicode_ci DEFAULT NULL,
+    'user_level' TINYINT(1) NOT NULL DEFAULT 1,
+    'is_logged_in' BOOLEAN NOT NULL DEFAULT FALSE,
+    'last_login' TIMESTAMP WITH time zone DEFAULT now() NOT NULL,
+    'last_logged_ip' INT UNSIGNED DEFAULT NULL,
+    'currently_logged_ip' INT UNSIGNED DEFAULT NULL,
+    'reg_date' TIMESTAMP WITH time zone DEFAULT now() NOT NULL,
+    'email' TEXT COLLATE utf8_unicode_ci DEFAULT NULL,
+    'phone_num' TEXT COLLATE utf8_unicode_ci DEFAULT NULL,
+    'bank_name' TEXT COLLATE utf8_unicode_ci DEFAULT NULL,
+    'bank_number' TEXT COLLATE utf8_unicode_ci DEFAULT NULL,
+    'bank_holder' TEXT COLLATE utf8_unicode_ci DEFAULT NULL,
+    'dominant' TEXT COLLATE utf8_unicode_ci NOT NULL,
+    'total_bet' BIGINT NOT NULL DEFAULT 0,
+    'total_won' BIGINT NOT NULL DEFAULT 0,
+    'total_lost' BIGINT NOT NULL DEFAULT 0,
+    'net_profit' BIGINT NOT NULL DEFAULT 0,
+    'total_deposit' BIGINT NOT NULL DEFAULT 0,
+    'total_withdrawn' BIGINT NOT NULL DEFAULT 0,
+    'commission_rate' FLOAT NOT NULL DEFAULT 0,
+    'status' CHAR(4) DEFAULT '0000', // Should decide
+    'description' TEXT COLLATE utf8_unicode_ci DEFAULT NULL,
+    'joined_domain' TEXT COLLATE utf8_unicode_ci DEFAULT NULL,
+    PRIMARY KEY ('id'),
+    UNIQUE KEY 'username' ('username'),
+    UNIQUE KEY 'nickname' ('nickname'),
+    KEY 'joined_domain' ('domain')
+) ENGINE=MyISAM AUTO_INCREMENT=23881 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
