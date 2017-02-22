@@ -179,7 +179,7 @@ server.listen(config.SERVER.PORT, function() {
 
 /** Log uncaught exceptions and kill the application **/
 process.on('uncaughtException', function (err) {
-    console.error((new Date).toUTCString() + ' uncaughtException:', err.message);
+    console.error(new Date() + ' uncaughtException:', err.message);
     console.error(err.stack);
     process.exit(1);
 });
