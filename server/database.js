@@ -36,3 +36,22 @@ function query(query, params, callback) {
 }
 
 exports.query = query;
+
+exports.validateUser = function(username, password, callback) {
+    assert(username && password);
+
+    query('SELECT id, password FROM users WHERE lower(username) = lower($1)', [username], function (err, data) {
+        if (err) return callback(err);
+
+        if (data.rows.length === 0)
+            return callback('NO_USER');
+
+        var user = data.rows[0];
+
+        var verified = passwordHash.verify(password, user.password);
+        if (!verified)
+            return callback('WRONG_PASSWORD', user.id);
+
+        callback(null, user);
+    });
+};
