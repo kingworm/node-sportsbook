@@ -5,7 +5,7 @@ var _ = require('lodash');
 
 var database = require('./database');
 var lib = require('./lib');
-var config = require('../configs/config');
+var config = require('./configs/config');
 
 var sessionOptions = {
     httpOnly: true
