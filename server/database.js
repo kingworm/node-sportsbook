@@ -13,7 +13,6 @@ function connect() {
 }
 
 function query(query, params, callback) {
-    //third parameter is optional
     assert(query);
     if (typeof params == 'function') {
         callback = params;
@@ -24,8 +23,8 @@ function query(query, params, callback) {
         var client = connect();
         client.query(query, params, function(err, result) {
             if (err) {
-                if (err.code === '') {
-                    console.error('[INTERNAL] Warning: Retrying deadlocked transaction: ', query, params);
+                if (err.code) {
+                    console.error('Retrying deadlocked transaction: ', query, params);
                     return doIt();
                 }
                 else return callback(err);
