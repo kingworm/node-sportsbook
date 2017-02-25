@@ -38,7 +38,7 @@ exports.query = query;
 
 
 //FUNCTION BLOCK
-exports.createUser = function(username, password, email, ipAddress, userAgent, fp, callback) {
+exports.createUser = function(username, password, ipAddress, userAgent, callback) {
     assert(username && password);
 
     var hashedPassword = passwordHash.generate(password);
@@ -92,8 +92,8 @@ function createSession(userId, ipAddress, userAgent, remember, callback) {
     else
         expired.setDate(expired.getDate() + 21);
 
-    query('INSERT INTO sessions(id, user_id, ip_address, user_agent, fingerprint, expired) VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
-        [sessionId, userId, ipAddress, userAgent, fp, expired], function(err, res) {
+    query('INSERT INTO sessions(id, user_id, ip_address, user_agent, expired) VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
+        [sessionId, userId, ipAddress, userAgent, expired], function(err, res) {
         if (err) return callback(err);
         assert(res.rows.length === 1);
 

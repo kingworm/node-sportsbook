@@ -44,7 +44,6 @@ CREATE TABLE sessions (
     user_id INT(11) NOT NULL REFERENCES users(id),
     ip_address INT(11) UNSIGNED NOT NULL,
     user_agent VARCHAR(255),
-    fingerprint VARCHAR(255),
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expired TIMESTAMP NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
