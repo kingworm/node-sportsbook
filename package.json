@@ -1,0 +1,43 @@
+{
+  "name": "node-sportsbook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/workingdanny911/node-sportsbook.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/workingdanny911/node-sportsbook/issues"
+  },
+  "homepage": "https://github.com/workingdanny911/node-sportsbook#readme",
+  "dependencies": {
+    "anti-ddos": "0.0.1",
+    "assert": "^1.4.1",
+    "async": "^2.1.5",
+    "better-assert": "^1.0.2",
+    "body-parser": "^1.16.1",
+    "compression": "^1.6.2",
+    "cookie-parser": "^1.4.3",
+    "debug": "^2.6.1",
+    "dot-emc": "^0.1.2",
+    "express": "^4.14.1",
+    "lodash": "^4.17.4",
+    "morgan": "^1.8.1",
+    "mysql": "^2.13.0",
+    "password-hash": "^1.2.2",
+    "path": "^0.12.7",
+    "request": "^2.79.0",
+    "socket.io": "^1.7.3",
+    "socket.io-cookie": "0.0.1",
+    "speakeasy": "^2.0.0",
+    "timeago": "^1.5.4",
+    "uuid": "^3.0.1"
+  }
+}

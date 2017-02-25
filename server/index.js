@@ -12,38 +12,17 @@ var ioCookieParser = require('socket.io-cookie');
 var _ = require('lodash');
 var debug = require('debug')('app:index');
 var morgan = require('morgan');
+var path = require('path');
 
 var app = express();
 
-var config = require('../configs/config');
+var config = require('./configs/config');
 var routes = require('./routes');
-var database = require('./database');
 
 debug('booting sportsbook');
 
-//TimeAgo Settings:
-var timeago = require('timeago');
-var timeago_strings = _.extend(timeago.settings.strings, {
-  seconds: '< 1 min',
-  minute: '1 min',
-  minutes: '%d mins',
-  hour: '1 hour',
-  hours: '%d hours',
-  day: '1 day',
-  days: '%d days',
-  month: '1 month',
-  months: '%d months',
-  year: '1 year',
-  years: '%d years'
-});
-timeago.settings.strings = timeago_strings;
-
-
-/** Render Engine
- *
- * Put here render engine global variable trough app.locals
- * **/
-app.set("views", .join(__dirname, '../views'));
+/** Render Engine **/
+app.set("views", path.join(__dirname, '../views'));
 
 var dotCaching = true;
 
@@ -64,10 +43,10 @@ app.enable('trust proxy');
 
 
 
-/** Serve Static content **/
+/** Server Static content **/
 var twoWeeksInSeconds = 1209600;
 
-app.use('/node_modules', express.static(.join(__dirname, '../node_modules'), { maxAge: twoWeeksInSeconds * 1000 }));
+app.use('/node_modules', express.static(path.join(__dirname, '../node_modules'), { maxAge: twoWeeksInSeconds * 1000 }));
 
 
 var antiddos = new Antiddos();
@@ -87,10 +66,7 @@ app.set("view engine", "html");
 app.set('trust proxy', 1) // trust first proxy
 
 
-/** Login middleware
- *
- * If the user is logged append the user object to the request
- */
+/** Login Middleware **/
 app.use(function(req, res, next) {
     debug('incoming http request');
 
@@ -115,15 +91,7 @@ app.use(function(req, res, next) {
 
 });
 
-/** Error Middleware
- *
- * How to handle the errors:
- * If the error is a string: Send it to the client.
- * If the error is an actual: error print it to the server log.
- *
- * We do not use next() to avoid sending error logs to the client
- * so this should be the last middleware in express .
- */
+/** Error Middleware **/
 function errorHandler(err, req, res, next) {
 
     if (err) {
@@ -131,7 +99,7 @@ function errorHandler(err, req, res, next) {
             return res.render('error', { error: err });
         } else {
             if (err.stack) {
-                console.error('[INTERNAL_ERROR] ', err, err.stack, req.);
+                console.error('[INTERNAL_ERROR] ', err, err.stack, req);
             } else console.error('[INTERNAL_ERROR', err);
 
             res.render('error');
@@ -148,7 +116,7 @@ app.use(errorHandler);
 
 /**  Server **/
 var server = http.createServer(app);
-var io = socketIO(server, config.SOCKET_IO_CONFIG); //Socket io must be after the last app.use
+var io = socketIO(server, config.SOCKET_IO_CONFIG);
 io.use(ioCookieParser);
 
 /** Socket io login middleware **/
