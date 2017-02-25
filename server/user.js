@@ -1,6 +1,5 @@
-var assert = require('better-assert');
+var assert = require('assert');
 var request = require('request');
-var speakeasy = require('speakeasy');
 var uuid = require('uuid');
 var _ = require('lodash');
 

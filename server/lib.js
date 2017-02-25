@@ -1,5 +1,4 @@
 var assert = require('assert');
-var config = require('./configs/config');
 
 exports.isInvalidUsername = function(input) {
     if (typeof input !== 'string') return 'NOT_STRING';
