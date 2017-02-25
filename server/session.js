@@ -38,7 +38,7 @@ exports.register  = function(req, res, next) {
         });
     }
 
-    database.createUser(username, password, email, ipAddress, userAgent, function(err, sessionId) {
+    database.createUser(username, password, ipAddress, userAgent, function(err, sessionId) {
         if (err) {
             if (err === 'USERNAME_TAKEN') {
                 values.user.name = null;
