@@ -21,4 +21,6 @@ module.exports = function(app) { // Routing parts
 
     app.get('/', staticPageLogged('index'));
     app.get('login', staticPageLogged('login'));
+
+    app.post('/', session.login);
 };

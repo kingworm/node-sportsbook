@@ -21,16 +21,17 @@ function query(query, params, callback) {
     function doIt() {
         var client = connect();
         client.query(query, params, function(err, result) {
-            if (err) {
-                if (err.code) {
-                    console.error('Retrying deadlocked transaction: ', query, params);
-                    return doIt();
-                }
-                else return callback(err);
-            }
+            if (err) return callback(err);
 
             callback(null, result);
         });
     }
 }
 exports.query = query;
+
+var test = connect();
+test.query('SELECT * FROM users', function(err, result) {
+    if(err) console.error(err);
+
+    else console.log(result);
+});
