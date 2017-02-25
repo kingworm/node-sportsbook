@@ -1,6 +1,6 @@
-var assert = require('better-assert');
-var user = require('./user');
+var session = require('./session');
 var config = require('./configs/config');
+var restricts = require('./restricts');
 
 function staticPageLogged(page, loggedGoTo) {
 
@@ -15,26 +15,6 @@ function staticPageLogged(page, loggedGoTo) {
             user: user
         });
     }
-}
-
-function restrict(req, res, next) {
-    if (!req.user) {
-       res.status(401);
-       if (req.header('Accept') === 'text/plain')
-          res.send('Not authorized');
-       else
-          res.render('401');
-       return;
-    } else
-        next();
-}
-
-function restrictRedirectToHome(req, res, next) {
-    if(!req.user) {
-        res.redirect('/');
-        return;
-    }
-    next();
 }
 
 module.exports = function(app) { // Routing parts

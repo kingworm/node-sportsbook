@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 
 var http = require('http');
-var assert = require('assert');
 var compression = require('compression');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -95,7 +94,7 @@ function errorHandler(err, req, res, next) {
         }
 
     } else {
-        console.warning("A 'next()' call was made without arguments, if this an error or a msg to the client?");
+        console.warning("check the arguments");
     }
 
 }

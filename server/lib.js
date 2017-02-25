@@ -1,5 +1,3 @@
-var assert = require('assert');
-
 exports.isInvalidUsername = function(input) {
     if (typeof input !== 'string') return 'NOT_STRING';
     if (input.length === 0) return 'NOT_PROVIDED';

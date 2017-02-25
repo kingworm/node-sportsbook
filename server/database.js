@@ -1,49 +1,12 @@
-var assert = require('assert');
-var config = require('./configs/config');
-var mysql = require('mysql');
 var passwordHash = require('password-hash');
+var DBClient = require('./database_client');
 
-function connect() {
-    return mysql.createConnection({
-        host: config.DB.HOST,
-        user: config.DB.USER,
-        password: config.DB.PASS,
-        database: config.DB.DATABASE
-    });
-}
-
-function query(query, params, callback) {
-    assert(query);
-    if (typeof params == 'function') {
-        callback = params;
-        params = [];
-    }
-    doIt();
-    function doIt() {
-        var client = connect();
-        client.query(query, params, function(err, result) {
-            if (err) {
-                if (err.code) {
-                    console.error('Retrying deadlocked transaction: ', query, params);
-                    return doIt();
-                }
-                else return callback(err);
-            }
-
-            callback(null, result);
-        });
-    }
-}
-exports.query = query;
-
-
-//FUNCTION BLOCK
 exports.createUser = function(username, password, ipAddress, userAgent, callback) {
     assert(username && password);
 
     var hashedPassword = passwordHash.generate(password);
 
-    query('SELECT COALESCE(COUNT(*), 0) AS count FROM users WHERE lower(username) = lower($1)', [username],
+    DBClient.query('SELECT COALESCE(COUNT(*), 0) AS count FROM users WHERE lower(username) = lower($1)', [username],
         function(err, data) {
             if (err) return callback(err);
 
@@ -51,7 +14,7 @@ exports.createUser = function(username, password, ipAddress, userAgent, callback
             if (data.rows[0].count > 0)
                 return callback('USERNAME_TAKEN');
 
-            query('INSERT INTO users(username, password) VALUES($1, $2) RETURNING id', [username, hashedPassword],
+            DBClient.query('INSERT INTO users(username, password) VALUES($1, $2) RETURNING id', [username, hashedPassword],
                 function(err, data) {
                     if(err) return callback(err);
 
@@ -67,7 +30,7 @@ exports.createUser = function(username, password, ipAddress, userAgent, callback
 exports.validateUser = function(username, password, callback) {
     assert(username && password);
 
-    query('SELECT * FROM users WHERE lower(username) = lower($1)', [username], function (err, data) {
+    DBClient.query('SELECT * FROM users WHERE lower(username) = lower($1)', [username], function (err, data) {
         if (err) return callback(err);
 
         if (data.rows.length === 0)
@@ -92,7 +55,7 @@ function createSession(userId, ipAddress, userAgent, remember, callback) {
     else
         expired.setDate(expired.getDate() + 21);
 
-    query('INSERT INTO sessions(id, user_id, ip_address, user_agent, expired) VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
+    DBClient.query('INSERT INTO sessions(id, user_id, ip_address, user_agent, expired) VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
         [sessionId, userId, ipAddress, userAgent, expired], function(err, res) {
         if (err) return callback(err);
         assert(res.rows.length === 1);
@@ -108,5 +71,5 @@ exports.createSession = createSession;
 exports.expireSessionsByUserId = function(userId, callback) {
     assert(userId);
 
-    query('UPDATE sessions SET expired = now() WHERE user_id = $1 AND expired > now()', [userId], callback);
+    DBClient.query('UPDATE sessions SET expired = now() WHERE user_id = $1 AND expired > now()', [userId], callback);
 };
