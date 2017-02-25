@@ -1,7 +1,6 @@
-var fs = require('fs');
-
-var Antiddos = require('anti-ddos')
 var express = require('express');
+var app = express();
+
 var http = require('http');
 var assert = require('assert');
 var compression = require('compression');
@@ -13,8 +12,6 @@ var _ = require('lodash');
 var debug = require('debug')('app:index');
 var morgan = require('morgan');
 var path = require('path');
-
-var app = express();
 
 var config = require('./configs/config');
 var routes = require('./routes');
@@ -41,22 +38,14 @@ app.engine("html", require("dot-emc").init(
 app.disable('x-powered-by');
 app.enable('trust proxy');
 
-
-
 /** Server Static content **/
 var twoWeeksInSeconds = 1209600;
-
 app.use('/node_modules', express.static(path.join(__dirname, '../node_modules'), { maxAge: twoWeeksInSeconds * 1000 }));
-
-
-var antiddos = new Antiddos();
-app.use(antiddos.express);
 
 /** Middleware **/
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(compression());
-
 app.use(morgan('common'));
 
 /** App settings **/
@@ -119,7 +108,7 @@ var server = http.createServer(app);
 var io = socketIO(server, config.SOCKET_IO_CONFIG);
 io.use(ioCookieParser);
 
-/** Socket io login middleware **/
+/** Socket io middleware **/
 io.use(function(socket, next) {
     debug('incoming socket connection');
 
